@@ -31,7 +31,9 @@ def predict():
     prediction = model.predict(input_features)
     
     # Convert prediction to human-readable format
-    result = 'Demented' if prediction[0] == 1 else 'Nondemented'
+
+    
+    result = 'Demented' if prediction[0] == 1  else 'Nondemented'
     
     return render_template('result.html', prediction=result)
 
