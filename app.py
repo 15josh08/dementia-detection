@@ -1,7 +1,6 @@
 from flask import Flask, render_template, request
 import pickle
 import pandas as pd
-import os
 from sklearn.preprocessing import MinMaxScaler
 
 app = Flask(__name__)
@@ -37,5 +36,4 @@ def predict():
     return render_template('result.html', prediction=result)
 
 if __name__ == '__main__':
-    port = os.environ.get("PORT", 5000)
-    app.run(debug=True, host = "0.0.0.0", port = port)
+    app.run(debug=True)
