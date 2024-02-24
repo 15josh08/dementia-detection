@@ -9,6 +9,10 @@ app = Flask(__name__)
 with open('random_forest_model.pkl', 'rb') as f:
     model = pickle.load(f)
 
+# Load the scaler object
+with open('scaler.pkl', 'rb') as f:
+    scaler = pickle.load(f)
+
 # Define a route for the home page
 @app.route('/')
 def home():
@@ -26,14 +30,13 @@ def predict():
     
     # Preprocess the input data
     input_features = pd.DataFrame([features], columns=['M/F', 'Age', 'EDUC', 'SES', 'MMSE', 'eTIV', 'nWBV', 'ASF'])
+    input_features_scaled = scaler.transform(input_features)
     
     # Make prediction
-    prediction = model.predict(input_features)
+    prediction = model.predict(input_features_scaled)
     
     # Convert prediction to human-readable format
-
-    
-    result = 'Demented' if prediction[0] == 1  else 'Nondemented'
+    result = 'Demented' if prediction[0] == 1 else 'Nondemented'
     
     return render_template('result.html', prediction=result)
 
