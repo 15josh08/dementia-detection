@@ -11,21 +11,20 @@ df = pd.read_csv('oasis_longitudinal.csv')
 df = df.loc[df['Visit'] == 1]
 df = df.reset_index(drop=True)
 
-# Convert categorical variables to numerical
-df['M/F'] = df['M/F'].replace({'F': 0, 'M': 1})
-df['Group'] = df['Group'].replace({'Converted': 'Demented'})
-df['Group'] = df['Group'].replace({'Demented': 1, 'Nondemented': 0})
+# Convert categorical variables to numerical with explicit downcasting
+df['M/F'] = df['M/F'].replace({'F': 0, 'M': 1}).infer_objects(copy=False)
+df['Group'] = df['Group'].replace({'Converted': 'Demented'}).replace({'Demented': 1, 'Nondemented': 0}).infer_objects(copy=False)
 
 # Drop unnecessary columns
-df = df.drop(['MRI ID', 'Visit', 'Hand'], axis=1)
+df.drop(['MRI ID', 'Visit', 'Hand'], axis=1, inplace=True)
 
 # Handle missing values
 df['SES'].fillna(df.groupby('EDUC')['SES'].transform('median'), inplace=True)
-df = df.dropna()
+df.dropna(inplace=True)
 
 # Prepare features and target
 Y = df['Group'].values
-X = df[['M/F','Age', 'EDUC', 'SES', 'MMSE', 'eTIV', 'nWBV', 'ASF']]
+X = df[['M/F', 'Age', 'EDUC', 'SES', 'MMSE', 'eTIV', 'nWBV', 'ASF']]
 
 # Split the data into training and test sets
 X_train, X_test, Y_train, Y_test = train_test_split(X, Y, random_state=0)
