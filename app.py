@@ -1,9 +1,11 @@
 from flask import Flask, request, jsonify
+from flask_cors import CORS  # Import CORS from flask_cors
 import pickle
 import pandas as pd
 from sklearn.preprocessing import MinMaxScaler
 
 app = Flask(__name__)
+CORS(app)  # Enable CORS for all routes by passing the Flask app instance to CORS
 
 # Load the trained model
 with open('random_forest_model.pkl', 'rb') as f:
